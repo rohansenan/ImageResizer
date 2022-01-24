@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 // Here's a free test for you! Model yours after this one.
 // Test functions have no interface and thus no RMEs, but
 // add a comment like the one here to say what it is testing.
@@ -15,6 +14,7 @@ using namespace std;
 // that Matrix_at returns that value for each element.
 TEST(test_fill_basic) {
   Matrix *mat = new Matrix; // create a Matrix in dynamic memory
+
 
   const int width = 3;
   const int height = 5;

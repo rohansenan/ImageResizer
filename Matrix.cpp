@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "Matrix.h"
+using namespace std;
 
 // REQUIRES: mat points to a Matrix
 //           0 < width && width <= MAX_MATRIX_WIDTH
@@ -10,7 +11,10 @@
 // EFFECTS:  Initializes *mat as a Matrix with the given width and height.
 // NOTE:     Do NOT use new or delete here.
 void Matrix_init(Matrix* mat, int width, int height) {
-  assert(false); // TODO Replace with your implementation!
+  Matrix matrix;
+  matrix.width = width;
+  matrix.height = height;
+  *mat = matrix;
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -22,7 +26,17 @@ void Matrix_init(Matrix* mat, int width, int height) {
 //           by a newline. This means there will be an "extra" space at
 //           the end of each line.
 void Matrix_print(const Matrix* mat, std::ostream& os) {
-  assert(false); // TODO Replace with your implementation!
+  Matrix matrix = *mat;
+  os << matrix.width << " " << matrix.height << endl;
+  //this is probs wrong
+  for (int i = 0; i < matrix.height; i++)
+  {
+    for (int j = 0; j < matrix.width; j++)
+    {
+      os << matrix.data[j * i] << " ";
+    }
+    os << endl;
+  }
 }
 
 // REQUIRES: mat points to an valid Matrix
