@@ -10,10 +10,7 @@
 // EFFECTS:  Initializes *mat as a Matrix with the given width and height.
 // NOTE:     Do NOT use new or delete here.
 void Matrix_init(Matrix* mat, int width, int height) {
-  Matrix matrix;
-  matrix.width = width;
-  matrix.height = height;
-  *mat = matrix;
+  assert(false); // TODO Replace with your implementation!
 }
 
 // REQUIRES: mat points to a valid Matrix

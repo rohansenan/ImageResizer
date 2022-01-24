@@ -1,4 +1,3 @@
-CXXFLAGS ?= --std=c++11 -Wall -Werror -pedantic -g -D_GLIBCXX_DEBUG
 # Makefile
 # Build rules for EECS 280 project 2
 
