@@ -33,6 +33,17 @@ TEST(test_fill_basic) {
 
 // ADD YOUR TESTS HERE
 // You are encouraged to use any functions from Matrix_test_helpers.h as needed.
+TEST(test_matrix_width_and_height)
+{
+  Matrix *mat = new Matrix;
+
+  const int width = 3;
+  const int height = 5;
+  Matrix_init(mat, 3, 5);
+
+  ASSERT_EQUAL(Matrix_width(mat), 3);
+  ASSERT_EQUAL(Matrix_height(mat), 5);
+}
 
 
 // NOTE: The unit test framework tutorial in Lab 2 originally

@@ -94,7 +94,7 @@ const int* Matrix_at(const Matrix* mat, int row, int column) {
 // MODIFIES: *mat
 // EFFECTS:  Sets each element of the Matrix to the given value.
 void Matrix_fill(Matrix* mat, int value) {
-  for (int i = 0; i < mat->data[mat->width * mat->height]; i++)
+  for (int i = 0; i < mat->width * mat->height; i++)
   {
     mat->data[i] = value;
   }
@@ -122,7 +122,7 @@ void Matrix_fill_border(Matrix* mat, int value) {
 // EFFECTS:  Returns the value of the maximum element in the Matrix
 int Matrix_max(const Matrix* mat) {
   int max = mat->data[0];
-  for (int i = 0; i < mat->data[mat->width * mat->height]; i++)
+  for (int i = 0; i < mat->width * mat->height; i++)
   {
     if (mat->data[i] > max)
     {
@@ -144,7 +144,19 @@ int Matrix_max(const Matrix* mat) {
 //           the leftmost one.
 int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
                                       int column_start, int column_end) {
-  assert(false); // TODO Replace with your implementation!
+  int indexStart = mat->width * row + column_start;
+  int indexEnd = mat->width * row + column_end;
+  int minValue = mat->data[indexStart];
+  int minIndex = indexStart;
+  for (int i = indexStart; i < indexEnd; i++)
+  {
+    if (mat->data[i] < minValue)
+    {
+      minValue = mat->data[i];
+      minIndex = i;
+    }
+  }
+  return minIndex % mat->width;
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -156,5 +168,17 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
 //           column_start (inclusive) and column_end (exclusive).
 int Matrix_min_value_in_row(const Matrix* mat, int row,
                             int column_start, int column_end) {
-  assert(false); // TODO Replace with your implementation!
+  int indexStart = mat->width * row + column_start;
+  int indexEnd = mat->width * row + column_end;
+  int minValue = mat->data[indexStart];
+  int minIndex = indexStart;
+  for (int i = indexStart; i < indexEnd; i++)
+  {
+    if (mat->data[i] < minValue)
+    {
+      minValue = mat->data[i];
+      minIndex = i;
+    }
+  }
+  return minValue;
 }
