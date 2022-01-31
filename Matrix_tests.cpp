@@ -37,14 +37,93 @@ TEST(test_matrix_width_and_height)
 {
   Matrix *mat = new Matrix;
 
-  const int width = 3;
-  const int height = 5;
-  Matrix_init(mat, 3, 5);
+  Matrix_init(mat, 5, 3);
 
-  ASSERT_EQUAL(Matrix_width(mat), 3);
-  ASSERT_EQUAL(Matrix_height(mat), 5);
+  ASSERT_EQUAL(Matrix_width(mat), 5);
+  ASSERT_EQUAL(Matrix_height(mat), 3);
+
+  delete mat;
 }
 
+TEST(test_matrix_row_and_column)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 12);
+  int *ptr = mat->data + 3;
+  int *ptr2 = mat->data + 7;
+
+  ASSERT_EQUAL(Matrix_row(mat, ptr), 0);
+  ASSERT_EQUAL(Matrix_column(mat, ptr), 3);
+
+  ASSERT_EQUAL(Matrix_row(mat, ptr2), 1);
+  ASSERT_EQUAL(Matrix_column(mat, ptr2), 2);
+
+  delete mat;
+}
+
+TEST(test_matrix_at)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 0);
+  mat->data[7] = 12;
+  int *ptr = mat->data + 7;
+  
+  ASSERT_EQUAL(*Matrix_at(mat, Matrix_row(mat, ptr), Matrix_column(mat, ptr)), 12);
+  ASSERT_EQUAL(Matrix_at(mat, Matrix_row(mat, ptr), Matrix_column(mat, ptr)), ptr);
+
+  delete mat;
+}
+
+TEST(test_matrix_fill_border)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 0);
+  Matrix_fill_border(mat, 12);
+  for (int i = 0; i < mat->height; ++i)
+  {
+    for (int j = 0; j < mat->width; ++j)
+    {
+      if (i == 0 || i == mat->height - 1 || j == 0 || j == mat->width -1)
+      {
+        ASSERT_EQUAL(*Matrix_at(mat, i, j), 12);
+      }
+      else
+      {
+        ASSERT_EQUAL(*Matrix_at(mat, i, j), 0);
+      }
+    }
+  }
+  
+  delete mat;
+}
+
+TEST(test_matrix_max)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 0);
+  *Matrix_at(mat, 1, 3) = 12;
+  *Matrix_at(mat, 0, 0) = 9;
+  ASSERT_EQUAL(Matrix_max(mat), 12);
+
+  delete mat;
+}
+
+TEST(test_column_of_min_value)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 0);
+
+}
 
 // NOTE: The unit test framework tutorial in Lab 2 originally
 // had a semicolon after TEST_MAIN(). Although including and
