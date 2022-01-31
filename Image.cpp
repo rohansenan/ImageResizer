@@ -10,7 +10,8 @@
 // EFFECTS:  Initializes the Image with the given width and height.
 // NOTE:     Do NOT use new or delete here.
 void Image_init(Image* img, int width, int height) {
-  assert(false); // TODO Replace with your implementation!
+  img->width = width;
+  img->height = height;
 }
 
 // REQUIRES: img points to an Image

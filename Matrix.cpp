@@ -27,9 +27,9 @@ void Matrix_init(Matrix* mat, int width, int height) {
 //           the end of each line.
 void Matrix_print(const Matrix* mat, std::ostream& os) {
   os << mat->width << " " << mat->height << endl;
-  for (int i = 0; i < mat->height; i++)
+  for (int i = 0; i < mat->height; ++i)
   {
-    for (int j = 0; j < mat->width; j++)
+    for (int j = 0; j < mat->width; ++j)
     {
           os << mat->data[mat->width * i + j] << " ";
     }
@@ -94,7 +94,7 @@ const int* Matrix_at(const Matrix* mat, int row, int column) {
 // MODIFIES: *mat
 // EFFECTS:  Sets each element of the Matrix to the given value.
 void Matrix_fill(Matrix* mat, int value) {
-  for (int i = 0; i < mat->width * mat->height; i++)
+  for (int i = 0; i < mat->width * mat->height; ++i)
   {
     mat->data[i] = value;
   }
@@ -106,9 +106,9 @@ void Matrix_fill(Matrix* mat, int value) {
 //           the given value. These are all elements in the first/last
 //           row or the first/last column.
 void Matrix_fill_border(Matrix* mat, int value) {
-  for (int i = 0; i < mat->height; i++)
+  for (int i = 0; i < mat->height; ++i)
   {
-    for (int j = 0; j < mat->width; j++)
+    for (int j = 0; j < mat->width; ++j)
     {
       if (i == 0 || i == mat->height - 1 || j == 0 || j == mat->width - 1)
       {
@@ -122,7 +122,7 @@ void Matrix_fill_border(Matrix* mat, int value) {
 // EFFECTS:  Returns the value of the maximum element in the Matrix
 int Matrix_max(const Matrix* mat) {
   int max = mat->data[0];
-  for (int i = 0; i < mat->width * mat->height; i++)
+  for (int i = 0; i < mat->width * mat->height; ++i)
   {
     if (mat->data[i] > max)
     {
@@ -148,7 +148,7 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
   int indexEnd = mat->width * row + column_end;
   int minValue = mat->data[indexStart];
   int minIndex = indexStart;
-  for (int i = indexStart; i < indexEnd; i++)
+  for (int i = indexStart; i < indexEnd; ++i)
   {
     if (mat->data[i] < minValue)
     {
@@ -172,7 +172,7 @@ int Matrix_min_value_in_row(const Matrix* mat, int row,
   int indexEnd = mat->width * row + column_end;
   int minValue = mat->data[indexStart];
   int minIndex = indexStart;
-  for (int i = indexStart; i < indexEnd; i++)
+  for (int i = indexStart; i < indexEnd; ++i)
   {
     if (mat->data[i] < minValue)
     {
