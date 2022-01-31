@@ -116,13 +116,38 @@ TEST(test_matrix_max)
   delete mat;
 }
 
-TEST(test_column_of_min_value)
+TEST(test_column_of_min_value_in_row)
 {
   Matrix *mat = new Matrix;
 
   Matrix_init(mat, 5, 3);
-  Matrix_fill(mat, 0);
+  Matrix_fill(mat, 12);
+  *Matrix_at(mat, 1, 0) = -4;
+  *Matrix_at(mat, 1, 1) = 4;
+  *Matrix_at(mat, 1, 2) = 3;
+  *Matrix_at(mat, 1, 3) = 2;
+  *Matrix_at(mat, 1, 4) = -2;
 
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 1, 1, 4), 3);
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 0, 2, 4), 2);
+
+  delete mat;
+}
+
+TEST(test_min_value_in_row)
+{
+  Matrix *mat = new Matrix;
+
+  Matrix_init(mat, 5, 3);
+  Matrix_fill(mat, 12);
+  *Matrix_at(mat, 1, 0) = -4;
+  *Matrix_at(mat, 1, 1) = 4;
+  *Matrix_at(mat, 1, 2) = 3;
+  *Matrix_at(mat, 1, 3) = 2;
+  *Matrix_at(mat, 1, 4) = -2;
+
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 1, 1, 4), 2);
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 2, 4), 12);
 }
 
 // NOTE: The unit test framework tutorial in Lab 2 originally

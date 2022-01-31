@@ -150,6 +150,8 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
                                       int column_start, int column_end) {
   assert (0 <= row && row < Matrix_height(mat));
   assert (0 <= column_start && column_end < Matrix_width(mat));
+  assert (column_start < column_end);
+  
   int indexStart = mat->width * row + column_start;
   int indexEnd = mat->width * row + column_end;
   int minValue = mat->data[indexStart];
@@ -176,6 +178,8 @@ int Matrix_min_value_in_row(const Matrix* mat, int row,
                             int column_start, int column_end) {
   assert (0 <= row && row < Matrix_height(mat));
   assert (0 <= column_start && column_end < Matrix_width(mat));
+  assert (column_start < column_end);
+
   int indexStart = mat->width * row + column_start;
   int indexEnd = mat->width * row + column_end;
   int minValue = mat->data[indexStart];
