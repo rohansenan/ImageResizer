@@ -3,6 +3,8 @@
 #include <cassert>
 #include "Image.h"
 
+using namespace std;
+
 // REQUIRES: img points to an Image
 //           0 < width && width <= MAX_MATRIX_WIDTH
 //           0 < height && height <= MAX_MATRIX_HEIGHT
@@ -24,15 +26,17 @@ void Image_init(Image* img, int width, int height) {
 // NOTE:     Do NOT use new or delete here.
 void Image_init(Image* img, std::istream& is) {
   int idx=0;
-  is.ignore();
-  is >> img->width >>img->height;
-  is.ignore();
+  string x;
+  int y;
+  is >> x;
+  is >> img->width >> img->height;
+  is >> y;
   while(!is.eof())
    {
-     is >> img->red_channel.data[idx];
+    is >> img->red_channel.data[idx];
     is >> img->green_channel.data[idx];
-     is >> img->blue_channel.data[idx];
-     idx+=1;
+    is >> img->blue_channel.data[idx];
+    idx+=1;
    }
 }
 
