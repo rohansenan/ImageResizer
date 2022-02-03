@@ -148,11 +148,6 @@ void test_cost(const Matrix *cost_mat, string prefix){
   Matrix* cost_mat_correct = new Matrix;
   load_matrix(cost_mat_correct, prefix + "_cost_correct.txt");
 
-  for (int i = 0; i < cost_mat->width * cost_mat->height; i++)
-  {
-    cout << cost_mat->data[i] << " " << cost_mat_correct->data[i] << " " << i << endl;
-  }
-
   assert(Matrix_equal(cost_mat, cost_mat_correct));
   cout << "PASS" << endl;
 

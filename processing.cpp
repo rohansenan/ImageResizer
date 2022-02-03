@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include "processing.h"
-#include "image.h"
+#include "Image.h"
 #include "Matrix.h"
 
 using namespace std;
@@ -91,21 +91,25 @@ static int squared_difference(Pixel p1, Pixel p2) {
 //           image is computed and written into it.
 //           See the project spec for details on computing the energy matrix.
 void compute_energy_matrix(const Image* img, Matrix* energy) {
- energy->width = img->width;
- energy->height = img->height;
+  Matrix_init(energy,Image_width(img),Image_height(img));
  int border = 0;
- int NumOfBorders = (img-> width * 2) + ((img->height -2)*2);
+ int NumOfBorders = (Image_width(img) * 2) + ((Image_height(img) -2)*2);
  int *borders = new int[NumOfBorders];
  NumOfBorders = 0;
- for (int idx = 0; idx< img->width * img->height; idx ++)
+ for (int idx = 0; idx< Image_width(img) * Image_height(img); idx ++)
  {
-   if( idx/img->width !=0 && idx/img->width != (img->height)-1 && idx % img->width !=0  && idx % img->width != (img->width)-1)
+   if(idx/Image_width(img) !=0 && idx/Image_width(img) != (Image_height(img))-1
+      && idx % Image_width(img) !=0  && idx % Image_width(img) != (Image_width(img))-1)
    {
-     energy->data[idx] = squared_difference(Image_get_pixel(img,(idx/img->width)-1,idx%img->width),Image_get_pixel(img,(idx/img->width)+1,idx%img->width)) 
-                        + squared_difference(Image_get_pixel(img,idx/img->width,(idx%img->width)-1), Image_get_pixel(img,idx/img->width,(idx%img->width)+1));
-     if (border < energy->data[idx])
+     *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy)) = 
+      squared_difference(Image_get_pixel(img,(idx/Image_width(img))-1,idx%
+      Image_width(img)),Image_get_pixel(img,(idx/Image_width(img))+1,idx%
+      Image_width(img)))+squared_difference(Image_get_pixel(img,idx/Image_width(img),
+      (idx%Image_width(img))-1),Image_get_pixel(img,idx/Image_width(img),
+                                                    (idx%Image_width(img))+1));
+     if (border < *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy)))
      {
-       border = energy->data[idx];
+       border = *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy));
      }
    }
    else
@@ -116,9 +120,10 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
  }
  for(int idx =0;idx < NumOfBorders; idx ++)
  {
-   energy->data[borders[idx]] = border;
+   *Matrix_at(energy, borders[idx]/Matrix_width(energy),
+           borders[idx]%Matrix_width(energy)) = border;
  }
- delete borders;
+ delete[] borders;
 
 }
 
@@ -133,25 +138,34 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
 //           computed and written into it.
 //           See the project spec for details on computing the cost matrix.
 void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
-  cost->width = energy->width;
-  cost->height = energy->height;
-  for(int idx =0; idx < cost->height * cost->width; idx ++)
+  Matrix_init(cost,Matrix_width(energy),Matrix_height(energy));
+  for(int idx =0; idx < Matrix_height(cost) * Matrix_width(cost); idx ++)
   { 
-    if(idx /cost->width==0)
+    if(idx /Matrix_width(cost)==0)
     {
-        cost->data[idx] = energy->data[idx];
+        *Matrix_at(cost,idx/Matrix_width(cost),idx%Matrix_width(cost)) =
+         *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy));
     }
-    else if ( idx %cost->width==0)
+    else if ( idx % Matrix_width(cost)==0)
     {
-      cost->data[idx] = energy->data[idx] + Matrix_min_value_in_row(cost,(idx/cost->width)-1, (idx % cost->width), (idx % cost->width)+1);
+      *Matrix_at(cost,idx/Matrix_width(cost),idx%Matrix_width(cost))= 
+      *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy))
+                  +Matrix_min_value_in_row(cost,(idx/Matrix_width(cost))-1,
+                    (idx%Matrix_width(cost)), (idx % Matrix_width(cost))+1);
     }
-    else if ( idx %cost->width==cost->width-1)
+    else if ( idx %Matrix_width(cost)==Matrix_width(cost)-1)
     {
-      cost->data[idx] = energy->data[idx] + Matrix_min_value_in_row(cost,(idx/cost->width)-1, (idx % cost->width)-1, (idx % cost->width));
+      *Matrix_at(cost,idx/Matrix_width(cost),idx%Matrix_width(cost))= 
+      *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy))
+                  +Matrix_min_value_in_row(cost,(idx/Matrix_width(cost))-1,
+                  (idx % Matrix_width(cost))-1,(idx % Matrix_width(cost)));
     }
     else
     {
-      cost->data[idx] = energy->data[idx] + Matrix_min_value_in_row(cost,(idx/cost->width)-1, (idx % cost->width)-1, (idx % cost->width)+1);
+      *Matrix_at(cost,idx/Matrix_width(cost),idx%Matrix_width(cost))= 
+      *Matrix_at(energy, idx/Matrix_width(energy),idx%Matrix_width(energy))
+                  +Matrix_min_value_in_row(cost,(idx/Matrix_width(cost))-1,
+                (idx % Matrix_width(cost))-1, (idx % Matrix_width(cost))+1);
     }
   }
 }
@@ -175,12 +189,12 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
 
 
 void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
-  
-  seam[cost->height -1]= Matrix_column_of_min_value_in_row( cost, cost->height -1, 0, cost->width-1);
+  seam[Matrix_height(cost) -1]= 
+  Matrix_column_of_min_value_in_row( cost,Matrix_height(cost)-1,0,Matrix_width(cost)-1);
 
-  for(int idx = cost->height-2 ; idx >=0; idx--)
+  for(int idx = Matrix_height(cost)-2 ; idx >=0; idx--)
   {
-    if (seam[idx+1]==0 && seam[idx+1] == cost->width-1)
+    if (seam[idx+1]==0 && seam[idx+1] == Matrix_width(cost)-1)
     {
       seam[idx]=Matrix_column_of_min_value_in_row( cost, idx, 0, 0);
     }
@@ -188,13 +202,13 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
     {
       seam[idx]=Matrix_column_of_min_value_in_row( cost, idx, 0, 1);
     }
-    else if (seam[idx+1]== cost->width-1)
+    else if (seam[idx+1]== Matrix_width(cost)-1)
     {
-     seam[idx]=Matrix_column_of_min_value_in_row( cost, idx, seam[idx+1]-1, seam[idx+1]);
+     seam[idx]=Matrix_column_of_min_value_in_row(cost, idx,seam[idx+1]-1,seam[idx+1]);
     }
     else
     {
-      seam[idx]=Matrix_column_of_min_value_in_row( cost, idx, seam[idx+1]-1, seam[idx+1]+1);
+     seam[idx]=Matrix_column_of_min_value_in_row(cost, idx,seam[idx+1]-1,seam[idx+1]+1);
     }
   }
 }
@@ -214,22 +228,22 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
 //           and then use delete when you are done with it.
 void remove_vertical_seam(Image *img, const int seam[]) {
   Image *copy = new Image;
-  Image_init(copy, img->width - 1,img->height);
+  Image_init(img,Image_width(img),Image_height(img));
+  Image_init(copy, Image_width(img) - 1,Image_height(img));
   int idx =0;
-  for ( int row=0; row < copy->height; row++)
+  for ( int row=0; row < Image_height(copy); row++)
   {
       for( int column = 0; column < seam[row]; column ++ )
       {
-        copy->red_channel.data[idx] = img->red_channel.data[row * img->width + column];
-        copy->green_channel.data[idx] = img->green_channel.data[row * img->width + column];
-        copy->blue_channel.data[idx] = img->blue_channel.data[row * img->width + column];
+        
+        Image_set_pixel(copy,idx/Image_width(copy),idx%Image_width(copy),
+                                      Image_get_pixel(img, row , column));
         idx+=1;
       }
-      for( int column = seam[row]+1; column < img->width; column ++ )
+      for( int column = seam[row]+1; column < Image_width(img); column ++ )
       {
-        copy->red_channel.data[idx] = img->red_channel.data[row * img->width + column];
-        copy->green_channel.data[idx] = img->green_channel.data[row * img->width + column];
-        copy->blue_channel.data[idx] = img->blue_channel.data[row * img->width + column];
+        Image_set_pixel(copy,idx/Image_width(copy),idx%Image_width(copy),
+                                      Image_get_pixel(img, row , column));
         idx+=1;
       }
   }
@@ -247,20 +261,21 @@ void remove_vertical_seam(Image *img, const int seam[]) {
 // NOTE:     Use the new operator here to create Matrix objects, and
 //           then use delete when you are done with them.
 void seam_carve_width(Image *img, int newWidth) {
-  while(img->width!=newWidth)
+  while(Image_width(img)!=newWidth)
   {
+    Image_init(img,Image_width(img),Image_height(img));
     Matrix *energy= new Matrix;
-    Matrix_init( energy, img->width, img->height);
+    Matrix_init( energy, Image_width(img), Image_height(img));
     compute_energy_matrix(img, energy);
     Matrix *cost= new Matrix;
-    Matrix_init( cost, img->width, img->height);
+    Matrix_init( cost, Image_width(img), Image_height(img));
     compute_vertical_cost_matrix(energy, cost);
-    int *seam = new int[cost->height-1];
+    int *seam = new int[Matrix_height(cost)-1];
     find_minimal_vertical_seam(cost, seam);
     remove_vertical_seam(img, seam);
     delete energy;
     delete cost;
-    delete seam;
+    delete[] seam;
   }
 }
 

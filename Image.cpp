@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "Image.h"
+#include "Matrix.h"
 
 using namespace std;
 

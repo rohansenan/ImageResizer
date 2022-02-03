@@ -183,13 +183,11 @@ int Matrix_min_value_in_row(const Matrix* mat, int row,
   int indexStart = mat->width * row + column_start;
   int indexEnd = mat->width * row + column_end;
   int minValue = mat->data[indexStart];
-  int minIndex = indexStart;
   for (int i = indexStart; i <= indexEnd; ++i)
   {
     if (mat->data[i] < minValue)
     {
       minValue = mat->data[i];
-      minIndex = i;
     }
   }
   return minValue;
