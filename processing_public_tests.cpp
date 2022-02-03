@@ -132,6 +132,7 @@ void test_energy(const Matrix *energy_mat, string prefix){
   Matrix* energy_mat_correct = new Matrix;
   load_matrix(energy_mat_correct, prefix + "_energy_correct.txt");
 
+
   assert(Matrix_equal(energy_mat, energy_mat_correct));
   cout << "PASS" << endl;
 
@@ -147,6 +148,11 @@ void test_cost(const Matrix *cost_mat, string prefix){
   Matrix* cost_mat_correct = new Matrix;
   load_matrix(cost_mat_correct, prefix + "_cost_correct.txt");
 
+  for (int i = 0; i < cost_mat->width * cost_mat->height; i++)
+  {
+    cout << cost_mat->data[i] << " " << cost_mat_correct->data[i] << " " << i << endl;
+  }
+
   assert(Matrix_equal(cost_mat, cost_mat_correct));
   cout << "PASS" << endl;
 
@@ -159,6 +165,7 @@ void test_find_seam(const int seam[], int n, string prefix){
 
   int seam_correct[MAX_MATRIX_HEIGHT];
   load_seam(seam_correct, prefix + "_seam_correct.txt");
+
 
   assert(array_equal(seam, seam_correct, n));
   cout << "PASS" << endl;
@@ -174,6 +181,7 @@ void test_remove_seam(const Image* img, const int seam[],
 
   Image* removed_img_correct = new Image;
   load_image(removed_img_correct, prefix + "_removed.correct.ppm");
+
 
   assert(Image_equal(removed_img, removed_img_correct));
   cout << "PASS" << endl;
