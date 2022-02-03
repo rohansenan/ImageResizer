@@ -126,7 +126,7 @@ TEST(test_column_of_min_value_in_row)
   *Matrix_at(mat, 1, 1) = 4;
   *Matrix_at(mat, 1, 2) = 3;
   *Matrix_at(mat, 1, 3) = 2;
-  *Matrix_at(mat, 1, 4) = -2;
+  *Matrix_at(mat, 1, 4) = 3;
 
   ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 1, 1, 4), 3);
   ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 0, 2, 4), 2);
@@ -144,7 +144,7 @@ TEST(test_min_value_in_row)
   *Matrix_at(mat, 1, 1) = 4;
   *Matrix_at(mat, 1, 2) = 3;
   *Matrix_at(mat, 1, 3) = 2;
-  *Matrix_at(mat, 1, 4) = -2;
+  *Matrix_at(mat, 1, 4) = 3;
 
   ASSERT_EQUAL(Matrix_min_value_in_row(mat, 1, 1, 4), 2);
   ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 2, 4), 12);

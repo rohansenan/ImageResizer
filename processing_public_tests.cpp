@@ -105,8 +105,9 @@ void test_rotate(const Image *img, string prefix){
   *rotated_img = *img;
   rotate_left(rotated_img);
   write_image(rotated_img, prefix + "_left" + OUT_PPM_EXT);
-
   load_image(rotated_img_correct, prefix + "_left.correct.ppm");
+
+
   assert(Image_equal(rotated_img, rotated_img_correct));
   cout << "PASS" << endl;
 
